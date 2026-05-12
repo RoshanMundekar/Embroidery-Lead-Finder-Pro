@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Settings — Lead Finder Pro{% endblock %}
+{% block page_title %}Settings{% endblock %}
+{% block page_subtitle %}Configure your application{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Scraping Settings -->
+    <div class="premium-card p-6 md:p-8 fade-in relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-60 h-60 bg-gradient-to-bl from-[#667eea]/5 to-transparent rounded-full -translate-y-1/2 translate-x-1/3"></div>
+        <div class="relative z-10">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center shadow-lg shadow-[#667eea]/25">
+                    <i data-lucide="sliders-horizontal" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-extrabold text-white">Scraping Configuration</h3>
+                    <p class="text-[11px] text-white/30">Fine-tune scraping behavior</p>
+                </div>
+            </div>
+
+            <form id="settings-form" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div>
+                        <label class="block text-[10px] font-bold text-white/30 mb-2 uppercase tracking-[0.15em]">Min Delay (sec)</label>
+                        <input type="number" id="scrape_delay_min" value="{{ settings.scrape_delay_min }}" min="1" max="30" class="input-premium w-full px-4 py-3 rounded-xl text-sm font-medium">
+                        <p class="text-[10px] text-white/15 mt-1">Minimum wait between requests</p>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-white/30 mb-2 uppercase tracking-[0.15em]">Max Delay (sec)</label>
+                        <input type="number" id="scrape_delay_max" value="{{ settings.scrape_delay_max }}" min="1" max="60" class="input-premium w-full px-4 py-3 rounded-xl text-sm font-medium">
+                        <p class="text-[10px] text-white/15 mt-1">Maximum wait between requests</p>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-white/30 mb-2 uppercase tracking-[0.15em]">Max Results</label>
+                        <input type="number" id="max_results" value="{{ settings.max_results }}" min="5" max="100" class="input-premium w-full px-4 py-3 rounded-xl text-sm font-medium">
+                        <p class="text-[10px] text-white/15 mt-1">Maximum leads per search</p>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-white/30 mb-2 uppercase tracking-[0.15em]">Request Timeout (sec)</label>
+                        <input type="number" id="request_timeout" value="{{ settings.request_timeout }}" min="10" max="120" class="input-premium w-full px-4 py-3 rounded-xl text-sm font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-white/30 mb-2 uppercase tracking-[0.15em]">Email Timeout (sec)</label>
+                        <input type="number" id="email_timeout" value="{{ settings.email_timeout }}" min="5" max="60" class="input-premium w-full px-4 py-3 rounded-xl text-sm font-medium">
+                    </div>
+                    <div class="flex items-end pb-1">
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" id="user_agent_rotation" {% if settings.user_agent_rotation %}checked{% endif %} class="custom-checkbox">
+                            <div>
+                                <span class="text-sm text-white/60 font-medium group-hover:text-white transition-colors">UA Rotation</span>
+                                <p class="text-[10px] text-white/15">Rotate user agents</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold">
+                    <i data-lucide="save" class="w-4 h-4"></i> Save Settings
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Data Management -->
+    <div class="premium-card p-6 md:p-8 fade-in stagger-1">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#f5576c] to-[#f093fb] flex items-center justify-center shadow-lg shadow-[#f5576c]/25">
+                <i data-lucide="database" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-extrabold text-white">Data Management</h3>
+                <p class="text-[11px] text-white/30">Clear stored data — cannot be undone</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+            <button onclick="clearData('leads')" class="group flex items-center gap-3 px-5 py-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#f5576c]/20 transition-all hover:bg-[#f5576c]/5">
+                <i data-lucide="users" class="w-5 h-5 text-white/20 group-hover:text-[#f5576c] transition-colors"></i>
+                <div class="text-left">
+                    <p class="text-sm font-semibold text-white/60 group-hover:text-white transition-colors">Clear Leads</p>
+                    <p class="text-[10px] text-white/15">All lead files</p>
+                </div>
+            </button>
+            <button onclick="clearData('searches')" class="group flex items-center gap-3 px-5 py-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#f5576c]/20 transition-all hover:bg-[#f5576c]/5">
+                <i data-lucide="search" class="w-5 h-5 text-white/20 group-hover:text-[#f5576c] transition-colors"></i>
+                <div class="text-left">
+                    <p class="text-sm font-semibold text-white/60 group-hover:text-white transition-colors">Clear Searches</p>
+                    <p class="text-[10px] text-white/15">Search history</p>
+                </div>
+            </button>
+            <button onclick="clearData('exports')" class="group flex items-center gap-3 px-5 py-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#f5576c]/20 transition-all hover:bg-[#f5576c]/5">
+                <i data-lucide="folder" class="w-5 h-5 text-white/20 group-hover:text-[#f5576c] transition-colors"></i>
+                <div class="text-left">
+                    <p class="text-sm font-semibold text-white/60 group-hover:text-white transition-colors">Clear Exports</p>
+                    <p class="text-[10px] text-white/15">Downloaded files</p>
+                </div>
+            </button>
+            <button onclick="clearData('logs')" class="group flex items-center gap-3 px-5 py-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-[#f5576c]/20 transition-all hover:bg-[#f5576c]/5">
+                <i data-lucide="file-text" class="w-5 h-5 text-white/20 group-hover:text-[#f5576c] transition-colors"></i>
+                <div class="text-left">
+                    <p class="text-sm font-semibold text-white/60 group-hover:text-white transition-colors">Clear Logs</p>
+                    <p class="text-[10px] text-white/15">Application logs</p>
+                </div>
+            </button>
+        </div>
+
+        <button onclick="clearData('all')" class="btn-danger inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold">
+            <i data-lucide="trash-2" class="w-4 h-4"></i> Clear Everything
+        </button>
+    </div>
+
+    <!-- App Info -->
+    <div class="premium-card p-6 fade-in stagger-2">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#4facfe] to-[#00f2fe] flex items-center justify-center shadow-lg shadow-[#4facfe]/25">
+                <i data-lucide="info" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-extrabold text-white">Application</h3>
+                <p class="text-[11px] text-white/30">System information</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="flex justify-between py-3 px-4 rounded-xl hover:bg-white/[0.02] transition-colors"><span class="text-white/25 text-sm">App Name</span><span class="text-white/60 text-sm font-semibold">Embroidery Lead Finder Pro</span></div>
+            <div class="flex justify-between py-3 px-4 rounded-xl hover:bg-white/[0.02] transition-colors"><span class="text-white/25 text-sm">Version</span><span class="text-white/60 text-sm font-semibold">1.0.0</span></div>
+            <div class="flex justify-between py-3 px-4 rounded-xl hover:bg-white/[0.02] transition-colors"><span class="text-white/25 text-sm">Framework</span><span class="text-sm font-semibold gradient-text">FastAPI</span></div>
+            <div class="flex justify-between py-3 px-4 rounded-xl hover:bg-white/[0.02] transition-colors"><span class="text-white/25 text-sm">Search API</span><span class="text-sm font-semibold gradient-text-cool">SerpAPI</span></div>
+            <div class="flex justify-between py-3 px-4 rounded-xl hover:bg-white/[0.02] transition-colors"><span class="text-white/25 text-sm">Storage</span><span class="text-sm font-semibold gradient-text-green">JSON Files</span></div>
+            <div class="flex justify-between py-3 px-4 rounded-xl hover:bg-white/[0.02] transition-colors"><span class="text-white/25 text-sm">UI Framework</span><span class="text-sm font-semibold gradient-text-warm">TailwindCSS</span></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+lucide.createIcons();
+
+document.getElementById('settings-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    try {
+        await apiPost('/api/settings', {
+            scrape_delay_min: parseInt(document.getElementById('scrape_delay_min').value),
+            scrape_delay_max: parseInt(document.getElementById('scrape_delay_max').value),
+            max_results: parseInt(document.getElementById('max_results').value),
+            request_timeout: parseInt(document.getElementById('request_timeout').value),
+            email_timeout: parseInt(document.getElementById('email_timeout').value),
+            user_agent_rotation: document.getElementById('user_agent_rotation').checked,
+        });
+        showToast('Settings saved successfully!', 'success');
+    } catch (err) { showToast('Failed to save settings', 'error'); }
+});
+
+async function clearData(type) {
+    const labels = { leads: 'all leads', searches: 'search history', exports: 'export files', logs: 'logs', all: 'ALL data' };
+    const confirmed = await confirmAction('⚠️ Delete ' + (labels[type] || type) + '? This cannot be undone.');
+    if (!confirmed) return;
+    try {
+        await apiPost('/api/settings/clear-' + type);
+        showToast('Data cleared successfully!', 'success');
+    } catch (err) { showToast('Failed to clear data', 'error'); }
+}
+</script>
+{% endblock %}

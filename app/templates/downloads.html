@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Downloads — Lead Finder Pro{% endblock %}
+{% block page_title %}Downloads{% endblock %}
+{% block page_subtitle %}Export & manage your files{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Export All -->
+    <div class="premium-card p-6 md:p-8 fade-in relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-[#43e97b]/5 to-transparent rounded-full -translate-y-1/2 translate-x-1/3"></div>
+        <div class="relative z-10">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#43e97b] to-[#38f9d7] flex items-center justify-center shadow-lg shadow-[#43e97b]/25">
+                    <i data-lucide="download-cloud" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-extrabold text-white">Export All Leads</h3>
+                    <p class="text-[11px] text-white/30">Download your complete lead database</p>
+                </div>
+            </div>
+            <p class="text-white/35 text-sm mb-6 ml-[52px]">Choose your preferred format. Files are generated fresh on every download.</p>
+            <div class="flex flex-wrap gap-3 ml-[52px]">
+                <a href="/download/all/json" class="group relative inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#667eea]/10 to-[#764ba2]/5 border border-[#667eea]/15 hover:border-[#667eea]/30 transition-all hover:-translate-y-1">
+                    <div class="w-10 h-10 rounded-xl bg-[#667eea]/15 flex items-center justify-center">
+                        <i data-lucide="file-json" class="w-5 h-5 text-[#667eea]"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-white">JSON</p>
+                        <p class="text-[10px] text-white/30">Structured data</p>
+                    </div>
+                </a>
+                <a href="/download/all/csv" class="group relative inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#43e97b]/10 to-[#38f9d7]/5 border border-[#43e97b]/15 hover:border-[#43e97b]/30 transition-all hover:-translate-y-1">
+                    <div class="w-10 h-10 rounded-xl bg-[#43e97b]/15 flex items-center justify-center">
+                        <i data-lucide="file-spreadsheet" class="w-5 h-5 text-[#43e97b]"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-white">CSV</p>
+                        <p class="text-[10px] text-white/30">Spreadsheet ready</p>
+                    </div>
+                </a>
+                <a href="/download/all/xlsx" class="group relative inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#f093fb]/10 to-[#f5576c]/5 border border-[#f093fb]/15 hover:border-[#f093fb]/30 transition-all hover:-translate-y-1">
+                    <div class="w-10 h-10 rounded-xl bg-[#f093fb]/15 flex items-center justify-center">
+                        <i data-lucide="file-down" class="w-5 h-5 text-[#f093fb]"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-white">Excel</p>
+                        <p class="text-[10px] text-white/30">Styled workbook</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export History -->
+    <div class="premium-card p-6 fade-in stagger-1">
+        <div class="flex items-center justify-between mb-5">
+            <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-[#667eea]/15 flex items-center justify-center"><i data-lucide="folder" class="w-3.5 h-3.5 text-[#667eea]"></i></div>
+                Export History
+            </h4>
+            <span class="text-[10px] text-white/15 font-semibold">{{ export_files|length }} files</span>
+        </div>
+
+        {% if export_files %}
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-sm">
+                <thead><tr class="border-b border-white/5">
+                    <th class="text-left py-3 px-4 text-white/20 font-bold text-[10px] uppercase tracking-wider">Filename</th>
+                    <th class="text-left py-3 px-4 text-white/20 font-bold text-[10px] uppercase tracking-wider">Format</th>
+                    <th class="text-left py-3 px-4 text-white/20 font-bold text-[10px] uppercase tracking-wider">Size</th>
+                    <th class="text-left py-3 px-4 text-white/20 font-bold text-[10px] uppercase tracking-wider">Date</th>
+                    <th class="text-right py-3 px-4 text-white/20 font-bold text-[10px] uppercase tracking-wider">Actions</th>
+                </tr></thead>
+                <tbody>
+                {% for file in export_files %}
+                <tr class="table-row-hover border-b border-white/[0.02]" id="file-row-{{ loop.index }}">
+                    <td class="py-3.5 px-4 text-white/70 font-semibold text-[12px]">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="file" class="w-4 h-4 text-white/15"></i>
+                            {{ file.filename }}
+                        </div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        {% if file.format == 'JSON' %}
+                        <span class="badge bg-[#667eea]/10 text-[#667eea] border border-[#667eea]/15">JSON</span>
+                        {% elif file.format == 'CSV' %}
+                        <span class="badge bg-[#43e97b]/10 text-[#43e97b] border border-[#43e97b]/15">CSV</span>
+                        {% elif file.format == 'XLSX' %}
+                        <span class="badge bg-[#f093fb]/10 text-[#f093fb] border border-[#f093fb]/15">XLSX</span>
+                        {% else %}
+                        <span class="badge bg-white/5 text-white/30">{{ file.format }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-3.5 px-4 text-white/30 text-[12px]">{{ file.size_display }}</td>
+                    <td class="py-3.5 px-4 text-white/20 text-[11px] font-mono">{{ file.created }}</td>
+                    <td class="py-3.5 px-4 text-right">
+                        <div class="flex items-center gap-1.5 justify-end">
+                            <a href="/download/file/{{ file.filename }}" class="p-1.5 rounded-lg hover:bg-[#667eea]/10 text-white/20 hover:text-[#667eea] transition-all" title="Download"><i data-lucide="download" class="w-4 h-4"></i></a>
+                            <button onclick="deleteFile('{{ file.filename }}', {{ loop.index }})" class="p-1.5 rounded-lg hover:bg-[#f5576c]/10 text-white/20 hover:text-[#f5576c] transition-all" title="Delete"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="flex flex-col items-center justify-center py-16 text-white/15">
+            <div class="w-20 h-20 rounded-3xl bg-white/[0.02] flex items-center justify-center mb-4">
+                <i data-lucide="folder-open" class="w-10 h-10 opacity-30"></i>
+            </div>
+            <p class="text-sm font-semibold text-white/25">No exports yet</p>
+            <p class="text-xs mt-1 text-white/10">Download leads to see files here</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+lucide.createIcons();
+async function deleteFile(filename, rowIndex) {
+    const confirmed = await confirmAction('Delete ' + filename + '?');
+    if (!confirmed) return;
+    try {
+        await apiDelete('/api/export/' + filename);
+        const row = document.getElementById('file-row-' + rowIndex);
+        if (row) { row.style.opacity = '0'; row.style.transform = 'translateX(20px)'; setTimeout(() => row.remove(), 300); }
+        showToast('File deleted', 'success');
+    } catch (err) { showToast('Delete failed', 'error'); }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Embroidery Lead Finder Pro — Find USA-based custom embroidery and apparel companies">
+    <title>{% block title %}Embroidery Lead Finder Pro{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        surface: { 50: '#f0f1ff', 100: '#e0e3ff', 800: '#0f1129', 900: '#0a0c1a', 950: '#060816' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="/static/css/custom.css">
+    {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen flex font-sans">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar fixed left-0 top-0 h-full w-[260px] z-40 flex flex-col transition-transform duration-300 lg:translate-x-0">
+        <!-- Logo -->
+        <div class="px-5 py-5 border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center shadow-lg shadow-[#667eea]/30 pulse-glow">
+                    <i data-lucide="gem" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-[15px] font-extrabold text-white tracking-tight">Lead Finder</h1>
+                    <p class="text-[9px] text-[#667eea] font-bold tracking-[0.2em] uppercase">Embroidery Pro</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex-1 px-3 py-5 space-y-1 overflow-y-auto custom-scrollbar">
+            <p class="px-3 mb-2 text-[9px] font-bold text-white/20 uppercase tracking-[0.2em]">Main Menu</p>
+            <a href="/" id="nav-dashboard" class="nav-link {% if page == 'dashboard' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 {% if page == 'dashboard' %}bg-gradient-to-r from-[#667eea]/15 to-transparent text-[#667eea]{% else %}text-white/40 hover:text-white/80 hover:bg-white/[0.03]{% endif %}">
+                <i data-lucide="layout-dashboard" class="w-[18px] h-[18px]"></i>
+                Dashboard
+            </a>
+            <a href="/search" id="nav-search" class="nav-link {% if page == 'search' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 {% if page == 'search' %}bg-gradient-to-r from-[#667eea]/15 to-transparent text-[#667eea]{% else %}text-white/40 hover:text-white/80 hover:bg-white/[0.03]{% endif %}">
+                <i data-lucide="radar" class="w-[18px] h-[18px]"></i>
+                Search Leads
+            </a>
+            <a href="/leads" id="nav-leads" class="nav-link {% if page == 'leads' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 {% if page == 'leads' %}bg-gradient-to-r from-[#667eea]/15 to-transparent text-[#667eea]{% else %}text-white/40 hover:text-white/80 hover:bg-white/[0.03]{% endif %}">
+                <i data-lucide="users" class="w-[18px] h-[18px]"></i>
+                My Leads
+            </a>
+            <a href="/downloads" id="nav-downloads" class="nav-link {% if page == 'downloads' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 {% if page == 'downloads' %}bg-gradient-to-r from-[#667eea]/15 to-transparent text-[#667eea]{% else %}text-white/40 hover:text-white/80 hover:bg-white/[0.03]{% endif %}">
+                <i data-lucide="download-cloud" class="w-[18px] h-[18px]"></i>
+                Downloads
+            </a>
+
+            <p class="px-3 mt-5 mb-2 text-[9px] font-bold text-white/20 uppercase tracking-[0.2em]">System</p>
+            <a href="/settings" id="nav-settings" class="nav-link {% if page == 'settings' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 {% if page == 'settings' %}bg-gradient-to-r from-[#667eea]/15 to-transparent text-[#667eea]{% else %}text-white/40 hover:text-white/80 hover:bg-white/[0.03]{% endif %}">
+                <i data-lucide="settings" class="w-[18px] h-[18px]"></i>
+                Settings
+            </a>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="px-4 py-4 border-t border-white/5">
+            <div class="premium-card px-4 py-3 rounded-xl">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-2 h-2 rounded-full bg-[#43e97b] animate-pulse"></div>
+                    <span class="text-[11px] text-white/50 font-medium">System Active</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <i data-lucide="shield-check" class="w-3 h-3 text-[#43e97b]"></i>
+                    <span class="text-[10px] text-[#43e97b]/70 font-semibold">SerpAPI Connected</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-30 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Main -->
+    <main class="flex-1 lg:ml-[260px] min-h-screen relative">
+        <!-- Top Bar -->
+        <header class="sticky top-0 z-20 border-b border-white/5" style="background: rgba(10, 12, 26, 0.8); backdrop-filter: blur(20px);">
+            <div class="flex items-center justify-between px-4 lg:px-8 h-[65px]">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-xl hover:bg-white/5 text-white/50 hover:text-white transition-all">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-base font-bold text-white">{% block page_title %}Dashboard{% endblock %}</h2>
+                        <p class="text-[10px] text-white/30 font-medium">{% block page_subtitle %}Overview & Analytics{% endblock %}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="/search" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl btn-primary text-[12px]">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> New Search
+                    </a>
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center shadow-lg shadow-[#667eea]/20">
+                        <span class="text-xs font-bold text-white">EP</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="p-4 lg:p-8 relative z-10 hero-pattern min-h-[calc(100vh-65px)]">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 z-50 hidden items-center justify-center" style="background: rgba(6, 8, 22, 0.85); backdrop-filter: blur(8px);">
+        <div class="flex flex-col items-center gap-5">
+            <div class="relative">
+                <div class="loading-spinner w-14 h-14 border-[3px] border-white/10 border-t-[#667eea] rounded-full"></div>
+                <div class="absolute inset-0 loading-spinner w-14 h-14 border-[3px] border-transparent border-b-[#f093fb] rounded-full" style="animation-direction: reverse; animation-duration: 1.2s;"></div>
+            </div>
+            <p id="loading-text" class="text-white/60 text-sm font-medium">Processing...</p>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+    <script>lucide.createIcons();</script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

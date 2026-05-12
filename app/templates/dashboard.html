@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Lead Finder Pro{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Real-time analytics & insights{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Hero Banner -->
+    <div class="premium-card p-6 md:p-8 fade-in relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-[#667eea]/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/3"></div>
+        <div class="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-[#f093fb]/10 to-transparent rounded-full translate-y-1/2 -translate-x-1/4"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="badge bg-[#667eea]/20 text-[#667eea] border border-[#667eea]/20">🚀 Pro Dashboard</span>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-extrabold text-white mb-2">Find Your Next <span class="gradient-text">Big Client</span></h3>
+                <p class="text-white/40 text-sm max-w-md">Discover USA-based embroidery & apparel companies. Extract emails, phones, and grow your digitizing business.</p>
+            </div>
+            <a href="/search" class="btn-primary inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm whitespace-nowrap">
+                <i data-lucide="radar" class="w-5 h-5"></i> Start Searching
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div class="premium-card p-5 glass-card-hover fade-in stagger-1 group">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center stat-icon stat-icon-blue shadow-lg shadow-[#667eea]/25 group-hover:scale-110 transition-transform duration-300">
+                    <i data-lucide="users" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-[10px] font-bold text-white/20 uppercase tracking-wider">Total</span>
+            </div>
+            <p class="text-4xl font-black text-white mb-1">{{ analytics.total_leads }}</p>
+            <p class="text-[11px] text-white/30 font-medium">Leads Collected</p>
+            <div class="mt-3 h-1 bg-white/5 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-full" style="width: {% if analytics.total_leads > 0 %}100{% else %}0{% endif %}%"></div>
+            </div>
+        </div>
+
+        <div class="premium-card p-5 glass-card-hover fade-in stagger-2 group">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#4facfe] to-[#00f2fe] flex items-center justify-center stat-icon stat-icon-cyan shadow-lg shadow-[#4facfe]/25 group-hover:scale-110 transition-transform duration-300">
+                    <i data-lucide="radar" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-[10px] font-bold text-white/20 uppercase tracking-wider">Total</span>
+            </div>
+            <p class="text-4xl font-black text-white mb-1">{{ analytics.total_searches }}</p>
+            <p class="text-[11px] text-white/30 font-medium">Searches Done</p>
+            <div class="mt-3 h-1 bg-white/5 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-[#4facfe] to-[#00f2fe] rounded-full" style="width: {% if analytics.total_searches > 0 %}100{% else %}0{% endif %}%"></div>
+            </div>
+        </div>
+
+        <div class="premium-card p-5 glass-card-hover fade-in stagger-3 group">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#43e97b] to-[#38f9d7] flex items-center justify-center stat-icon stat-icon-green shadow-lg shadow-[#43e97b]/25 group-hover:scale-110 transition-transform duration-300">
+                    <i data-lucide="mail-check" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-[10px] font-bold text-white/20 uppercase tracking-wider">Found</span>
+            </div>
+            <p class="text-4xl font-black text-white mb-1">{{ analytics.total_emails }}</p>
+            <p class="text-[11px] text-white/30 font-medium">Emails Extracted</p>
+            <div class="mt-3 h-1 bg-white/5 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-[#43e97b] to-[#38f9d7] rounded-full" style="width: {% if analytics.total_emails > 0 %}100{% else %}0{% endif %}%"></div>
+            </div>
+        </div>
+
+        <div class="premium-card p-5 glass-card-hover fade-in stagger-4 group">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#f093fb] to-[#f5576c] flex items-center justify-center stat-icon stat-icon-pink shadow-lg shadow-[#f093fb]/25 group-hover:scale-110 transition-transform duration-300">
+                    <i data-lucide="target" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-[10px] font-bold text-white/20 uppercase tracking-wider">Rate</span>
+            </div>
+            <p class="text-4xl font-black text-white mb-1">{{ analytics.email_rate }}<span class="text-lg text-white/40">%</span></p>
+            <p class="text-[11px] text-white/30 font-medium">Email Success</p>
+            <div class="mt-3 h-1 bg-white/5 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-[#f093fb] to-[#f5576c] rounded-full" style="width: {{ analytics.email_rate }}%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Leads by State -->
+        <div class="premium-card p-6 fade-in stagger-5">
+            <div class="flex items-center justify-between mb-5">
+                <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-[#667eea]/20 to-[#764ba2]/20 flex items-center justify-center">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-[#667eea]"></i>
+                    </div>
+                    Leads by State
+                </h4>
+                <span class="text-[10px] text-white/20 font-semibold uppercase">Top 10</span>
+            </div>
+            {% if analytics.top_states %}
+            <div class="space-y-3">
+                {% set colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#f5576c', '#fee140', '#38f9d7', '#a18cd1', '#fa709a'] %}
+                {% for state, count in analytics.top_states.items() %}
+                <div class="flex items-center gap-3 group">
+                    <span class="text-[11px] text-white/50 w-8 font-bold group-hover:text-white transition-colors">{{ state }}</span>
+                    <div class="flex-1 h-7 bg-white/[0.03] rounded-lg overflow-hidden">
+                        {% set max_count = analytics.top_states.values()|list|first %}
+                        {% set width = (count / max_count * 100) if max_count > 0 else 0 %}
+                        <div class="h-full rounded-lg flex items-center justify-end pr-3 transition-all duration-500" style="width: {{ width }}%; background: linear-gradient(90deg, {{ colors[loop.index0 % 10] }}33, {{ colors[loop.index0 % 10] }}99);">
+                            <span class="text-[10px] font-bold text-white">{{ count }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="flex flex-col items-center justify-center py-10 text-white/20">
+                <i data-lucide="bar-chart-3" class="w-12 h-12 mb-3 opacity-30"></i>
+                <p class="text-sm font-medium">No state data yet</p>
+                <p class="text-xs mt-1 text-white/10">Run a search to see analytics</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Top Keywords -->
+        <div class="premium-card p-6 fade-in stagger-6">
+            <div class="flex items-center justify-between mb-5">
+                <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-[#f093fb]/20 to-[#f5576c]/20 flex items-center justify-center">
+                        <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[#f093fb]"></i>
+                    </div>
+                    Trending Keywords
+                </h4>
+                <span class="text-[10px] text-white/20 font-semibold uppercase">Most Used</span>
+            </div>
+            {% if analytics.top_keywords %}
+            <div class="space-y-1">
+                {% for keyword, count in analytics.top_keywords.items() %}
+                <div class="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-white/[0.02] transition-colors group">
+                    <div class="flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-lg bg-gradient-to-br from-[#667eea]/10 to-[#764ba2]/10 flex items-center justify-center text-[10px] font-bold text-[#667eea]">{{ loop.index }}</span>
+                        <span class="text-[13px] text-white/60 font-medium group-hover:text-white transition-colors">{{ keyword }}</span>
+                    </div>
+                    <span class="badge bg-white/5 text-white/30 border border-white/5">{{ count }}×</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="flex flex-col items-center justify-center py-10 text-white/20">
+                <i data-lucide="hash" class="w-12 h-12 mb-3 opacity-30"></i>
+                <p class="text-sm font-medium">No keywords yet</p>
+                <p class="text-xs mt-1 text-white/10">Your search terms will appear here</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Searches -->
+    <div class="premium-card p-6 fade-in">
+        <div class="flex items-center justify-between mb-5">
+            <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-[#43e97b]/20 to-[#38f9d7]/20 flex items-center justify-center">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 text-[#43e97b]"></i>
+                </div>
+                Recent Activity
+            </h4>
+            <a href="/search" class="text-[11px] text-[#667eea] hover:text-[#764ba2] font-bold transition-colors flex items-center gap-1">
+                New Search <i data-lucide="arrow-right" class="w-3 h-3"></i>
+            </a>
+        </div>
+        {% if analytics.recent_searches %}
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-sm">
+                <thead><tr class="border-b border-white/5">
+                    <th class="text-left py-3 px-4 text-white/20 font-bold text-[10px] uppercase tracking-wider">Keyword</th>
+                    <th class="text-left py-3 px-4 text-white/20 font-bold text-[10px] uppercase tracking-wider">Location</th>
+                    <th class="text-left py-3 px-4 text-white/20 font-bold text-[10px] uppercase tracking-wider">Results</th>
+                    <th class="text-left py-3 px-4 text-white/20 font-bold text-[10px] uppercase tracking-wider">Date</th>
+                    <th class="text-right py-3 px-4 text-white/20 font-bold text-[10px] uppercase tracking-wider">Export</th>
+                </tr></thead>
+                <tbody>
+                {% for search in analytics.recent_searches %}
+                <tr class="table-row-hover border-b border-white/[0.03]">
+                    <td class="py-3.5 px-4 text-white/80 font-semibold text-[13px]">{{ search.search_keyword }}</td>
+                    <td class="py-3.5 px-4 text-white/40 text-[13px]">{{ search.location }}</td>
+                    <td class="py-3.5 px-4">
+                        <span class="badge bg-[#667eea]/10 text-[#667eea] border border-[#667eea]/15">{{ search.total_results }} leads</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-white/25 text-[11px] font-mono">{{ search.timestamp[:16].replace('T', ' ') }}</td>
+                    <td class="py-3.5 px-4 text-right">
+                        <div class="flex items-center gap-1.5 justify-end">
+                            <a href="/download/json/{{ search.search_id }}" class="p-1.5 rounded-lg hover:bg-[#667eea]/10 text-white/20 hover:text-[#667eea] transition-all" title="JSON"><i data-lucide="file-json" class="w-4 h-4"></i></a>
+                            <a href="/download/csv/{{ search.search_id }}" class="p-1.5 rounded-lg hover:bg-[#43e97b]/10 text-white/20 hover:text-[#43e97b] transition-all" title="CSV"><i data-lucide="file-spreadsheet" class="w-4 h-4"></i></a>
+                            <a href="/download/xlsx/{{ search.search_id }}" class="p-1.5 rounded-lg hover:bg-[#f093fb]/10 text-white/20 hover:text-[#f093fb] transition-all" title="Excel"><i data-lucide="file-down" class="w-4 h-4"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="flex flex-col items-center justify-center py-16 text-white/15">
+            <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-[#667eea]/5 to-[#764ba2]/5 flex items-center justify-center mb-4">
+                <i data-lucide="inbox" class="w-10 h-10 opacity-40"></i>
+            </div>
+            <p class="text-sm font-semibold text-white/25">No activity yet</p>
+            <p class="text-xs mt-1 text-white/10 mb-4">Start your first search to generate leads</p>
+            <a href="/search" class="btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs">
+                <i data-lucide="radar" class="w-3.5 h-3.5"></i> Search Now
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Quick Export -->
+    {% if analytics.total_leads > 0 %}
+    <div class="premium-card p-6 fade-in relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-60 h-60 bg-gradient-to-bl from-[#43e97b]/5 to-transparent rounded-full -translate-y-1/2 translate-x-1/4"></div>
+        <div class="relative z-10">
+            <h4 class="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                <i data-lucide="package" class="w-4 h-4 text-[#43e97b]"></i> Quick Export
+            </h4>
+            <p class="text-xs text-white/30 mb-4">Download all {{ analytics.total_leads }} leads in one click</p>
+            <div class="flex flex-wrap gap-3">
+                <a href="/download/all/json" class="btn-glass inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[12px] font-semibold">
+                    <i data-lucide="file-json" class="w-4 h-4 text-[#667eea]"></i> JSON
+                </a>
+                <a href="/download/all/csv" class="btn-glass inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[12px] font-semibold">
+                    <i data-lucide="file-spreadsheet" class="w-4 h-4 text-[#43e97b]"></i> CSV
+                </a>
+                <a href="/download/all/xlsx" class="btn-glass inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[12px] font-semibold">
+                    <i data-lucide="file-down" class="w-4 h-4 text-[#f093fb]"></i> Excel
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block scripts %}<script>lucide.createIcons();</script>{% endblock %}

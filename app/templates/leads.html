@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Leads — Lead Finder Pro{% endblock %}
+{% block page_title %}My Leads{% endblock %}
+{% block page_subtitle %}Manage & export your leads{% endblock %}
+
+{% block content %}
+<div class="space-y-5">
+    <!-- Controls -->
+    <div class="premium-card p-4 fade-in">
+        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+            <div class="flex-1 relative">
+                <i data-lucide="search" class="w-4 h-4 text-white/15 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="lead-search" placeholder="Search by company, email, city..." class="input-premium w-full pl-11 pr-4 py-2.5 rounded-xl text-sm font-medium">
+            </div>
+            <select id="state-filter" class="input-premium px-4 py-2.5 rounded-xl text-sm font-medium appearance-none cursor-pointer">
+                <option value="">All States</option>
+            </select>
+            <select id="per-page" class="input-premium px-4 py-2.5 rounded-xl text-sm font-medium appearance-none cursor-pointer">
+                <option value="25">25 per page</option>
+                <option value="50">50 per page</option>
+                <option value="100">100 per page</option>
+            </select>
+            <div class="flex items-center gap-2">
+                <a href="/download/all/json" class="btn-glass px-3 py-2.5 rounded-xl" title="Export JSON"><i data-lucide="file-json" class="w-4 h-4 text-[#667eea]"></i></a>
+                <a href="/download/all/csv" class="btn-glass px-3 py-2.5 rounded-xl" title="Export CSV"><i data-lucide="file-spreadsheet" class="w-4 h-4 text-[#43e97b]"></i></a>
+                <a href="/download/all/xlsx" class="btn-glass px-3 py-2.5 rounded-xl" title="Export Excel"><i data-lucide="file-down" class="w-4 h-4 text-[#f093fb]"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="premium-card overflow-hidden fade-in stagger-1">
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-white/5" style="background: rgba(102, 126, 234, 0.03);">
+                        <th class="text-left py-3.5 px-4 text-white/25 font-bold text-[10px] uppercase tracking-wider cursor-pointer hover:text-white/50 transition-colors select-none" onclick="sortLeads('company_name')">Company <span id="sort-company_name" class="text-[#667eea]"></span></th>
+                        <th class="text-left py-3.5 px-4 text-white/25 font-bold text-[10px] uppercase tracking-wider cursor-pointer hover:text-white/50 transition-colors select-none" onclick="sortLeads('email')">Email <span id="sort-email" class="text-[#667eea]"></span></th>
+                        <th class="text-left py-3.5 px-4 text-white/25 font-bold text-[10px] uppercase tracking-wider">Phone</th>
+                        <th class="text-left py-3.5 px-4 text-white/25 font-bold text-[10px] uppercase tracking-wider cursor-pointer hover:text-white/50 transition-colors select-none" onclick="sortLeads('rating')">Rating <span id="sort-rating" class="text-[#667eea]"></span></th>
+                        <th class="text-left py-3.5 px-4 text-white/25 font-bold text-[10px] uppercase tracking-wider cursor-pointer hover:text-white/50 transition-colors select-none" onclick="sortLeads('city')">City <span id="sort-city" class="text-[#667eea]"></span></th>
+                        <th class="text-left py-3.5 px-4 text-white/25 font-bold text-[10px] uppercase tracking-wider cursor-pointer hover:text-white/50 transition-colors select-none" onclick="sortLeads('state')">State <span id="sort-state" class="text-[#667eea]"></span></th>
+                        <th class="text-right py-3.5 px-4 text-white/25 font-bold text-[10px] uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="leads-body">
+                    <tr><td colspan="7" class="py-16 text-center text-white/20">
+                        <div class="loading-spinner w-8 h-8 border-2 border-white/5 border-t-[#667eea] rounded-full mx-auto mb-4"></div>
+                        <p class="text-sm font-medium">Loading leads...</p>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-5 py-4 border-t border-white/5">
+            <p id="leads-info" class="text-[11px] text-white/25 font-medium">Loading...</p>
+            <div class="flex items-center gap-1" id="pagination"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+lucide.createIcons();
+let currentPage = 1, currentSort = '', currentOrder = 'asc';
+
+async function loadLeads() {
+    const search = document.getElementById('lead-search').value;
+    const state = document.getElementById('state-filter').value;
+    const perPage = document.getElementById('per-page').value;
+    const params = new URLSearchParams({
+        page: currentPage, per_page: perPage,
+        ...(search && { search }), ...(state && { state_filter: state }),
+        ...(currentSort && { sort_by: currentSort, sort_order: currentOrder }),
+    });
+    try {
+        const data = await apiGet('/api/leads?' + params);
+        renderLeads(data);
+    } catch (err) { showToast('Failed to load leads', 'error'); }
+}
+
+function renderLeads(data) {
+    const body = document.getElementById('leads-body');
+    const info = document.getElementById('leads-info');
+    const pagination = document.getElementById('pagination');
+
+    if (!data.leads || data.leads.length === 0) {
+        body.innerHTML = `<tr><td colspan="7" class="py-16 text-center text-white/15">
+            <div class="w-16 h-16 rounded-2xl bg-white/[0.02] flex items-center justify-center mx-auto mb-4"><i data-lucide="inbox" class="w-8 h-8 opacity-30"></i></div>
+            <p class="text-sm font-semibold text-white/25">No leads found</p>
+            <p class="text-xs mt-1 text-white/10">Try a different search or clear filters</p>
+        </td></tr>`;
+        info.textContent = '0 leads';
+        pagination.innerHTML = '';
+        lucide.createIcons();
+    }
+
+    // Populate state filter dropdown from API
+    if (data.available_states && data.available_states.length > 0) {
+        const stateSelect = document.getElementById('state-filter');
+        const currentVal = stateSelect.value;
+        stateSelect.innerHTML = '<option value="">All States</option>';
+        data.available_states.forEach(st => {
+            const opt = document.createElement('option');
+            opt.value = st;
+            opt.textContent = st;
+            if (st === currentVal) opt.selected = true;
+            stateSelect.appendChild(opt);
+        });
+    }
+
+    if (!data.leads || data.leads.length === 0) return;
+
+    body.innerHTML = data.leads.map(lead => {
+        const email = lead.email
+            ? `<span class="text-[#43e97b] cursor-pointer hover:underline font-medium" onclick="copyToClipboard('${lead.email}')" title="Copy email">${lead.email}</span>`
+            : '<span class="text-white/10">—</span>';
+        const name = lead.website
+            ? `<a href="${lead.website}" target="_blank" class="text-[#667eea] hover:text-[#764ba2] font-semibold transition-colors">${escapeHtml(lead.company_name || '—')}</a>`
+            : `<span class="text-white/70 font-semibold">${escapeHtml(lead.company_name || '—')}</span>`;
+        return `<tr class="table-row-hover border-b border-white/[0.02]">
+            <td class="py-3 px-4 text-[12px]">${name}</td>
+            <td class="py-3 px-4 text-[12px]">${email}</td>
+            <td class="py-3 px-4 text-white/35 text-[12px]">${escapeHtml(lead.phone || '—')}</td>
+            <td class="py-3 px-4 text-[12px]">${lead.rating ? '<span class="text-[#fee140]">★</span> ' + lead.rating : '<span class="text-white/10">—</span>'}</td>
+            <td class="py-3 px-4 text-white/35 text-[12px]">${escapeHtml(lead.city || '—')}</td>
+            <td class="py-3 px-4 text-[12px]"><span class="badge bg-[#667eea]/8 text-[#667eea]/60 border border-[#667eea]/10 text-[9px]">${escapeHtml(lead.state || '—')}</span></td>
+            <td class="py-3 px-4 text-right">
+                <div class="flex items-center gap-1 justify-end">
+                    ${lead.email ? `<button onclick="copyToClipboard('${lead.email}')" class="p-1.5 rounded-lg hover:bg-[#43e97b]/10 text-white/15 hover:text-[#43e97b] transition-all" title="Copy Email"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>` : ''}
+                    ${lead.website ? `<a href="${lead.website}" target="_blank" class="p-1.5 rounded-lg hover:bg-[#667eea]/10 text-white/15 hover:text-[#667eea] transition-all" title="Visit Website"><i data-lucide="external-link" class="w-3.5 h-3.5"></i></a>` : ''}
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+
+    const start = (data.page - 1) * data.per_page + 1;
+    const end = Math.min(data.page * data.per_page, data.total);
+    info.textContent = `Showing ${start}–${end} of ${data.total} leads`;
+
+    let ph = '';
+    if (data.pages > 1) {
+        ph += `<button onclick="goToPage(${data.page - 1})" ${data.page <= 1 ? 'disabled' : ''} class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold ${data.page <= 1 ? 'text-white/10' : 'text-white/30 hover:text-white hover:bg-white/5'} transition-all">‹ Prev</button>`;
+        for (let i = Math.max(1, data.page - 2); i <= Math.min(data.pages, data.page + 2); i++) {
+            ph += `<button onclick="goToPage(${i})" class="w-8 h-8 rounded-lg text-[11px] font-bold ${i === data.page ? 'bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white shadow-lg shadow-[#667eea]/25' : 'text-white/30 hover:text-white hover:bg-white/5'} transition-all">${i}</button>`;
+        }
+        ph += `<button onclick="goToPage(${data.page + 1})" ${data.page >= data.pages ? 'disabled' : ''} class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold ${data.page >= data.pages ? 'text-white/10' : 'text-white/30 hover:text-white hover:bg-white/5'} transition-all">Next ›</button>`;
+    }
+    pagination.innerHTML = ph;
+    lucide.createIcons();
+}
+
+function sortLeads(f) {
+    if (currentSort === f) { currentOrder = currentOrder === 'asc' ? 'desc' : 'asc'; }
+    else { currentSort = f; currentOrder = 'asc'; }
+    document.querySelectorAll('[id^="sort-"]').forEach(el => el.textContent = '');
+    const ind = document.getElementById('sort-' + f);
+    if (ind) ind.textContent = currentOrder === 'asc' ? ' ▲' : ' ▼';
+    loadLeads();
+}
+function goToPage(p) { currentPage = p; loadLeads(); }
+
+document.getElementById('lead-search').addEventListener('input', debounce(() => { currentPage = 1; loadLeads(); }, 400));
+document.getElementById('state-filter').addEventListener('change', () => { currentPage = 1; loadLeads(); });
+document.getElementById('per-page').addEventListener('change', () => { currentPage = 1; loadLeads(); });
+
+loadLeads();
+</script>
+{% endblock %}
