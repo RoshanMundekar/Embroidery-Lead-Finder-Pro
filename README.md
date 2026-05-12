@@ -2,6 +2,15 @@
 
 A production-ready FastAPI web application for embroidery digitizing lead generation. Searches USA-based custom embroidery and apparel companies, scrapes leads from Google Maps, extracts emails from company websites, and stores everything in JSON files.
 
+
+---
+
+## Demo Video
+Watch here:https://drive.google.com/file/d/1R8k2gdvbkbH6_KSB5lkbC6zcFpL5xJsi/view?usp=sharing
+
+---
+
+
 ## Features
 
 - **Google Maps Scraping SERPAPI_API_KEY** — Find embroidery & apparel companies via Playwright browser automation
