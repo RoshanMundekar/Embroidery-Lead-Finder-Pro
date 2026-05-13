@@ -16,20 +16,33 @@ def _leads_to_dataframe(leads: list[dict]) -> pd.DataFrame:
     """Convert leads list to a clean Pandas DataFrame."""
     rows = []
     for lead in leads:
+        social = lead.get("social_links", {})
         rows.append({
             "Company Name": lead.get("company_name", ""),
             "Website": lead.get("website", ""),
             "Phone": lead.get("phone", ""),
             "Email": lead.get("email", ""),
+            "All Emails": "; ".join(lead.get("emails", [])),
+            "Phone Numbers": "; ".join(lead.get("phone_numbers", [])),
+            "Contact People": "; ".join(
+                c.get("name", "") + (" — " + c.get("title", "") if c.get("title") else "")
+                for c in lead.get("contact_people", [])
+            ),
+            "Job Titles": "; ".join(lead.get("job_titles", [])),
+            "Business Type": lead.get("business_type", ""),
+            "Lead Score": lead.get("lead_score", ""),
+            "Services": "; ".join(lead.get("services_found", [])),
             "Address": lead.get("address", ""),
             "City": lead.get("city", ""),
             "State": lead.get("state", ""),
             "Rating": lead.get("rating", ""),
             "Reviews": lead.get("reviews", ""),
             "Category": lead.get("category", ""),
-            "Facebook": lead.get("social_links", {}).get("facebook", ""),
-            "Instagram": lead.get("social_links", {}).get("instagram", ""),
-            "LinkedIn": lead.get("social_links", {}).get("linkedin", ""),
+            "Facebook": social.get("facebook", ""),
+            "Instagram": social.get("instagram", ""),
+            "LinkedIn": social.get("linkedin", ""),
+            "Twitter": social.get("twitter", ""),
+            "YouTube": social.get("youtube", ""),
         })
     return pd.DataFrame(rows)
 
